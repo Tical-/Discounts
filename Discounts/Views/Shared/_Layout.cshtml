@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
+                    <li id="AccountButton" onclick=""><a style="cursor: pointer;">Личный кабинет</a></li>
+                    <li id="LoginButton" onclick="ShowLoginForm();"><a style="cursor: pointer;">Войти</a></li>
+                    <li id="LogoutButton" onclick="Logout();"><a style="cursor: pointer;">Выйти</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+    <div id="Loading" style="display: none; position: absolute; left: 50%; top: 50%; margin: -32px 0 0 -32px; width: 64px;">
+        <img src="../../Content/Images/Loading.gif" />
+    </div>
+    <div id="LoginForm" style="display: none; background-color: white; padding: 15px; width: 220px; height: 130px; margin: -65px 0 0 -110px; position: absolute; top: 50%; left: 50%; border: 2px black solid; border-radius: 10px;">
+        <div onclick="CloseLoginForm();" style="cursor: pointer; position: relative; left: 190px; top: -25px; border-radius: 30px; background-color: black; color: white; width: 20px; text-align: center;"><b>X</b></div>
+        <table style="width: 100%; position: relative; top: -15px;">
+            <tr>
+                <td><label for="login">Логин</label></td>
+                <td><input id="login" type="text" style="width: 100%;" /></td>
+            </tr>
+            <tr>
+                <td><label for="password">Пароль</label></td>
+                <td><input id="password" type="password" style="width: 100%;" /></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input onclick="Login();" type="button" value="Войти" style="width: 100%;" /></td>
+            </tr>
+        </table>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script src="../../Scripts/auth.js"></script>
+</body>
+</html>

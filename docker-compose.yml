@@ -1,0 +1,8 @@
+version: '2.1'
+
+services:
+  discounts:
+    image: discounts
+    build:
+      context: .\Discounts
+      dockerfile: Dockerfile
