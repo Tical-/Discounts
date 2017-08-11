@@ -10,7 +10,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Discounts.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : GlobalController
     {
         [HttpPost]
         public JsonResult Test()
