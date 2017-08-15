@@ -8,12 +8,16 @@
             $("#Loading").hide();
         }
     });
+    if (UserRoleManager.IsUserInRole("Administrator"))
+        $("#AccountButton a").attr("href", "/Administrator/Index");
+    else
+        $("#AccountButton a").attr("href", "/Cabinet/Index");
 });
 function TestLoading() {
     $.ajax({
         type: 'POST',
         url: '/Home/Test'
-    }).done(function(data) {
+    }).done(function (data) {
 
     });
 }
@@ -22,7 +26,9 @@ function CloseLoginForm() {
 }
 function Logout() {
     sessionStorage.removeItem("access_token");
+    localStorage.removeItem("localStorage");
     AuthButtonsShowHide();
+    window.location.href = "/Home/Index";
 }
 function AuthButtonsShowHide() {
     if (sessionStorage.getItem("access_token") != null) {
@@ -52,8 +58,10 @@ function Login() {
         if (data != null && data.access_token != null && data.access_token != undefined) {
             sessionStorage.setItem('access_token', data.access_token);
             sessionStorage.setItem('expires_in', data.expires_in);
+            localStorage.setItem('access_token', data.access_token);
+            localStorage.setItem('expires_in', data.expires_in);
             $("#LoginForm").hide();
-            AuthButtonsShowHide();
+            window.location.href = "/Administrator/Index";
         }
     }).fail(function (data) {
         if (data.responseText ==

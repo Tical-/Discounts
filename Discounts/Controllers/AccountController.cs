@@ -21,7 +21,7 @@ namespace Discounts.Controllers
 {
     [Authorize]
     [RoutePrefix("api/Account")]
-    public class AccountController : ApiController
+    public class AccountController : System.Web.Http.ApiController
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;

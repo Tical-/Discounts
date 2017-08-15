@@ -1,0 +1,89 @@
+﻿@{
+    ViewBag.Title = "Управление пользователями";
+}
+@section scripts
+{
+    <script>
+        var model = new Application.UsersViewModel();
+        ko.applyBindingsWithValidation(model, document.getElementById('Users'));
+    </script>
+}
+<h1>
+    Пользователи:
+</h1>
+<style>
+    td {
+        border: 1px black solid;
+        padding: 10px;
+        text-align: center;
+    }
+</style>
+<div id="Users">
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    Id
+                </td>
+                <td>
+                    Email
+                </td>
+                <td>
+                    Имя пользователя
+                </td>
+                <td>
+                    Администратор
+                </td>
+                <td>
+                    Удаление
+                </td>
+            </tr>
+            <!-- ko foreach: Users -->
+            <tr>
+                <td data-bind="text:Id"></td>
+                <td>
+                    <input type="text" data-bind="value:Email" />
+                </td>
+                <td data-bind="text:UserName">
+                    <input type="text" data-bind="value:UserName" />
+                </td>
+                <td>
+                    <input type="checkbox" data-bind="checked: IsAdmin" />
+                </td>
+                <td>
+                    <input type="button" value="Удалить" data-bind="click:$parent.Delete.bind($data)" />
+                </td>
+            </tr>
+            <!-- /ko -->
+        </thead>
+    </table>
+    <input type="button" value="Сохранить изменения" data-bind="click:Save.bind($data)" />
+    <input type="button" value="Добавить пользователя" id="ShowAdd" data-bind="click:ShowAddForm" />
+
+    <div id="AddForm" style=" display: none; margin-top: 20px;">
+        <table style="border: 1px black solid;">
+            <tr>
+                <td>
+                    Email
+                </td>
+                <td>
+                    <input type="text" id="Email" />
+                </td>
+                <td>
+                    Имя пользователя
+                </td>
+                <td>
+                    <input type="text" id="UserName" />
+                </td>
+                <td>
+                    Администратор
+                </td>
+                <td>
+                    <input type="checkbox" id="IsAdmin" />
+                </td>
+            </tr>
+        </table>
+        <input type="button" value="Добавить" data-bind="click:Insert.bind($data)" />
+    </div>
+
+</div>

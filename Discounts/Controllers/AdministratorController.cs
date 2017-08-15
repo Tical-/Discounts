@@ -13,8 +13,12 @@ namespace Discounts.Controllers
 {
     [Authorize(Roles = "Administrator")]
     public class AdministratorController : GlobalController
-    {      
+    {
         public ActionResult Index()
+        {
+            return View();
+        }
+        public ActionResult Users()
         {
             return View();
         }
