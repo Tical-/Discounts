@@ -8,10 +8,6 @@
             $("#Loading").hide();
         }
     });
-    if (UserRoleManager.IsUserInRole("Administrator"))
-        $("#AccountButton a").attr("href", "/Administrator/Index");
-    else
-        $("#AccountButton a").attr("href", "/Cabinet/Index");
 });
 function TestLoading() {
     $.ajax({
@@ -25,6 +21,7 @@ function CloseLoginForm() {
     $("#LoginForm").hide();
 }
 function Logout() {
+    Application.POST("/api/Account/Logout", null, false);
     sessionStorage.removeItem("access_token");
     localStorage.removeItem("localStorage");
     AuthButtonsShowHide();
@@ -39,6 +36,13 @@ function AuthButtonsShowHide() {
         $("#LoginButton").show();
         $("#LogoutButton").hide();
         $("#AccountButton").hide();
+    }
+    if (UserRoleManager.IsUserInRole("Administrator")) {
+        $("#AccountButton a").attr("href", "/Administrator/Index");
+        $("#ApiLink").show();
+    } else {
+        $("#AccountButton a").attr("href", "/Cabinet/Index");
+        $("#ApiLink").hide();
     }
 }
 function ShowLoginForm() {

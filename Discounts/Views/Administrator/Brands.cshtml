@@ -1,0 +1,134 @@
+﻿@{
+
+}
+@section scripts
+{
+    <script>
+        var model = new Application.BrandsViewModel();
+        ko.applyBindingsWithValidation(model, document.getElementById('Brands'));
+        function Priview(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#priview').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#File").change(function () {
+            Priview(this);
+        });
+        $(window).resize(function () {
+            $('#All').masonry({
+                itemSelector: '.item',
+                isAnimated: true
+            });
+        });
+        //$(document).ready(function() {
+        //    var $container = $("#All");
+        //    $container.imagesLoaded(function() {
+        //        $container.masonry({
+        //            itemSelector: '.item',
+        //            isAnimated: true
+        //        });
+        //    });
+        //});
+        setTimeout(function () {
+            $('#All').masonry({
+                itemSelector: '.item',
+                isAnimated: true
+            });
+        }, 1500);
+    </script>
+}
+<style>
+    .item {
+        border: 1px black solid;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 300px;
+        text-align: center;
+        float: left;
+        margin: 10px;
+        overflow: hidden;
+    }
+
+    .Name {
+        font-size: 22px;
+        position: relative;
+        left: 15px;
+    }
+
+    .Description {
+    }
+
+    .closeButton {
+        float: right;
+        cursor: pointer;
+        color: white;
+        border: 1px solid black;
+        border-radius: 30px;
+        background: black;
+        font-size: 31px;
+        font-weight: bold;
+        display: inline-block;
+        line-height: 0px;
+        padding: 11px 3px;
+        position: relative;
+        left: 2px;
+        top: -2px;
+    }
+</style>
+<div id="Brands">
+    <h1><a href="~/Administrator/Index"><img src="~/Content/Images/back.png" style="width: 30px;" /></a> Управление брендами</h1>
+    <h4>Все бренды</h4>
+    <div id="All" class="list">
+        <!-- ko foreach: Brands -->
+        <div class="item">
+            <div class="closeButton" data-bind="click:$parent.Delete.bind($data)">
+                x
+            </div>
+            <a data-bind="attr:{ href: '/Administrator/Stores/' + Id() }">
+                <p class="Name" data-bind="text:Name"></p>
+                <p class="Description" data-bind="text:Description"></p>
+                <img data-bind="attr:{ src: '~/../../Images/' + File() }" style="width: 100%;" />
+            </a>
+        </div>
+        <!-- /ko -->
+    </div>
+    <div style="clear: left; padding-top: 20px;">
+        <h4>Добавить бренд</h4>
+        <table style="width: 400px;">
+            <tr>
+                <td>
+                    Название
+                </td>
+                <td>
+                    <input type="Text" id="Name" style="width: 100%;" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Описание
+                </td>
+                <td>
+                    <textarea id="Description" style="width: 100%;"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Фото
+                </td>
+                <td>
+                    <img id="priview" src="#" style="width: 100%;" />
+                    <input type="file" value="Выбрать" id="File" style="width: 100%;" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="button" value="Добавить" style="width: 100%;" data-bind="click:Insert.bind($data)" />
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

@@ -16,12 +16,12 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Discounts", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
-                    <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("Главная", "Index", "Home", new { area = "" }, null)</li>
+                    <li  style="display: none;" id="ApiLink">@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
                     <li id="AccountButton" onclick=""><a style="cursor: pointer;">Личный кабинет</a></li>
                     <li id="LoginButton" onclick="ShowLoginForm();"><a style="cursor: pointer;">Войти</a></li>
                     <li id="LogoutButton" onclick="Logout();"><a style="cursor: pointer;">Выйти</a></li>
@@ -62,8 +62,8 @@
 
     <script src="../../Scripts/My/MyKnockout.js"></script>
     <script src="../../Scripts/My/IndexViewModels.js"></script>
-
-
+    <script src="~/Scripts/My/masonry.pkgd.min.js"></script>
+    <script src="~/Scripts/My/imagesloaded.pkgd.min.js"></script>
 
     <script type="text/javascript">
     UserRoleManager.isLoggedIn("@ViewBag.isLoggedIn");

@@ -26,7 +26,7 @@
     self.Save = function (data) {
         var temp = ko.toJSON(ko.toJS(this));
         var answ = Application.POST("/api/AdminApi/SaveUsers", temp);
-        answ.always(function() {
+        answ.always(function () {
             self.GetUsers();
         });
     }
@@ -59,4 +59,62 @@
         }
     }
     self.GetUsers();
+}
+//====================================================================//
+Application.BrandsViewModel = function () {
+    var self = this;
+    self.Brands = ko.observableArray();
+    function Brand(data) {
+        var self = this;
+        if (data != null) {
+            self.Id = ko.observable(data.Id);
+            self.Name = ko.observable(data.Name);
+            self.ImageId = ko.observable(data.ImageId);
+            self.Description = ko.observable(data.Description);
+            self.File = ko.observable(data.File);
+        }
+        return self;
+    }
+    self.GetBrands = function () {
+        self.Brands.removeAll();
+        var answ = Application.POST("/api/AdminApi/GetBrands");
+        answ.success(function (data) {
+            $.each(data, function (index, value) {
+                self.Brands.push(new Brand(value));
+            });
+        });
+    };
+    self.GetBrands();
+    self.Insert = function (data) {
+        var ImageId = 0;
+        var filename = "";
+        var formData = new FormData();
+        formData.append('file', $('#File')[0].files[0]);
+
+        answ.success(function (data) {
+            ImageId = data.ID;
+            filename = data.file;
+            var answ = Application.POST("/api/AdminApi/InsertBrand", ko.toJSON({ Name: $("#Name").val(), Description: $("#Description").val(), ImageId: ImageId, Id: 0, File: "" }));
+            answ.success(function (data) {
+                var brand = new Brand();
+                brand.Id = ko.observable(data);
+                brand.Name = ko.observable($("#Name").val());
+                brand.Description = ko.observable($("#Description").val());
+                brand.File = ko.observable(filename);
+                self.Brands.push(brand);
+            });
+        });
+    }
+    self.Delete = function (dt) {
+        if (confirm("Удалить бренд?")) {
+            var answ = Application.POST("/api/AdminApi/DeleteBrand/" + dt.Id());
+            answ.success(function (data) {
+                self.Brands.remove(dt);
+                $('#All').masonry({
+                    itemSelector: '.item',
+                    isAnimated: true
+                });
+            });
+        }
+    }.bind(this);
 }

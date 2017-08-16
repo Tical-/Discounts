@@ -28,18 +28,19 @@ ko.validation.init();
     App.setAccessToken = function (accessToken) {
         sessionStorage.setItem("accessToken", accessToken);
     };
-    function getSecurityHeaders() {
+    App.Headers = function getSecurityHeaders() {
         var accessToken = localStorage["access_token"] || sessionStorage["access_token"];
         if (accessToken) {
             return { "Authorization": "Bearer " + accessToken };
         }
         return {};
     };
-    App.POST = function (url, data) {
-        var headers = getSecurityHeaders();
+    App.POST = function (url, data, async = true, contentType = 'application/json; charset=utf-8') {
+        var headers = App.Headers();
         return $.ajax(url, {
+            async: async,
             type: 'POST',
-            contentType: 'application/json; charset=utf-8',
+            contentType: contentType,
             dataType: "json",
             processData: false,
             cache: false,
@@ -58,7 +59,7 @@ ko.validation.init();
         });
     };
     App.GET = function (url) {
-        var headers = getSecurityHeaders();
+        var headers = App.Headers();
         console.log(headers);
         return $.ajax(url, {
             type: 'GET',
