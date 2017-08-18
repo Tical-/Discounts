@@ -230,6 +230,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdministratorController.cs" />
     <Compile Include="Controllers\GlobalController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\AdminApiController.cs" />
     <Compile Include="Global.asax.cs">
@@ -380,6 +381,7 @@
     <Content Include="Scripts\knockout.validation.min.js.map" />
     <Content Include="Views\Administrator\Brands.cshtml" />
     <Content Include="Views\Administrator\Stores.cshtml" />
+    <Content Include="Views\Test\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

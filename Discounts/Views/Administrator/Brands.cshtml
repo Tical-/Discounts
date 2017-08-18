@@ -19,6 +19,7 @@
             Priview(this);
         });
         $(window).resize(function () {
+            $('#All').masonry('destroy');
             $('#All').masonry({
                 itemSelector: '.item',
                 isAnimated: true
@@ -33,6 +34,8 @@
         //        });
         //    });
         //});
+
+
         setTimeout(function () {
             $('#All').masonry({
                 itemSelector: '.item',
@@ -43,16 +46,20 @@
 }
 <style>
     .item {
-        border: 1px black solid;
+        border: 3px Silver solid;
+        background-color: Gainsboro;
         border-radius: 8px;
         cursor: pointer;
-        width: 300px;
+        width: 250px;
         text-align: center;
         float: left;
         margin: 10px;
         overflow: hidden;
     }
-
+    .itemImg {
+        padding: 3px;
+    } 
+    
     .Name {
         font-size: 22px;
         position: relative;
@@ -91,7 +98,7 @@
             <a data-bind="attr:{ href: '/Administrator/Stores/' + Id() }">
                 <p class="Name" data-bind="text:Name"></p>
                 <p class="Description" data-bind="text:Description"></p>
-                <img data-bind="attr:{ src: '~/../../Images/' + File() }" style="width: 100%;" />
+                <img class="itemImg" data-bind="attr:{ src: '~/../../Images/' + File() }" style="width: 100%;" />
             </a>
         </div>
         <!-- /ko -->

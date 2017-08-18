@@ -3,5 +3,26 @@
 }
 @section scripts
 {
+    <script>
+        if (window.location.href.trim().split('/').length > 5) {
+            var Id = window.location.href.trim().split('/')[5];
+            if (Id != null && Id != undefined && Id.trim() !== '') {
 
+            } else {
+                window.location.href = "/Administrator/Brands";
+            }
+        } else {
+            window.location.href = "/Administrator/Brands";
+        }
+        var model = new Application.StoresViewModel();
+        ko.applyBindingsWithValidation(model, document.getElementById('Stores'));
+    </script>
 }
+
+<div id="Brands">
+    <h1><a href="~/Administrator/Brands"><img src="~/Content/Images/back.png" style="width: 30px;" /></a> Управление магазинами</h1>
+    <h4>Текущий бренд</h4>
+    
+
+
+</div>

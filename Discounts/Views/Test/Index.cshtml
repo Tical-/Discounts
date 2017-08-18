@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+@section scripts
+{
+    <script>
+        function DeleteInfo() {
+            $.ajax('/Test/DeleteInfo',
+                {
+                    type: 'POST',
+                    dataType: "json",
+                    processData: false,
+                    cache: false
+                });
+        }
+    </script>
+}
+
+<input type="button" value="Удалить всю информацию" onclick="DeleteInfo()" />
+

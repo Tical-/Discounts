@@ -90,18 +90,29 @@ Application.BrandsViewModel = function () {
         var filename = "";
         var formData = new FormData();
         formData.append('file', $('#File')[0].files[0]);
-
+        var answ = Application.POST("/api/AdminApi/UploadFile/", formData, false, false);
         answ.success(function (data) {
             ImageId = data.ID;
             filename = data.file;
-            var answ = Application.POST("/api/AdminApi/InsertBrand", ko.toJSON({ Name: $("#Name").val(), Description: $("#Description").val(), ImageId: ImageId, Id: 0, File: "" }));
-            answ.success(function (data) {
+            var answ2 = Application.POST("/api/AdminApi/InsertBrand", ko.toJSON({ Name: $("#Name").val(), Description: $("#Description").val(), ImageId: ImageId, Id: 0, File: "" }));
+            answ2.success(function (data) {
+                var tempScrollTop = $(window).scrollTop();
                 var brand = new Brand();
                 brand.Id = ko.observable(data);
                 brand.Name = ko.observable($("#Name").val());
                 brand.Description = ko.observable($("#Description").val());
                 brand.File = ko.observable(filename);
+                $("#Name").val("");
+                $("#Description").val("");
                 self.Brands.push(brand);
+                setTimeout(function () {
+                    $('#All').masonry('destroy');
+                    $('#All').masonry({
+                        itemSelector: '.item',
+                        isAnimated: true
+                    });
+                    $(window).scrollTop(tempScrollTop);
+                }, 1500);
             });
         });
     }
@@ -117,4 +128,11 @@ Application.BrandsViewModel = function () {
             });
         }
     }.bind(this);
+}
+
+
+//====================================================================//
+Application.StoresViewModel = function () {
+    var self = this;
+
 }
