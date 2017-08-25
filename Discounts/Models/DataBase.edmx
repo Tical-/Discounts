@@ -82,6 +82,15 @@
           <Property Name="Guid" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Extension" Type="nchar" MaxLength="10" Nullable="false" />
           <Property Name="BrandId" Type="int" />
+          <Property Name="StoreId" Type="int" />
+        </EntityType>
+        <EntityType Name="Stores">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nchar" MaxLength="100" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
@@ -139,7 +148,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Images_ToTable">
+        <Association Name="FK_Images_ToBrands">
           <End Role="Brands" Type="Self.Brands" Multiplicity="0..1">
             <OnDelete Action="Cascade" />
           </End>
@@ -153,6 +162,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Images_ToStores">
+          <End Role="Stores" Type="Self.Stores" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Images" Type="Self.Images" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stores">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Images">
+              <PropertyRef Name="StoreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="DataBaseStoreContainer">
           <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
@@ -162,6 +185,7 @@
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Brands" EntityType="Self.Brands" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Images" EntityType="Self.Images" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Stores" EntityType="Self.Stores" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
@@ -178,8 +202,12 @@
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
           </AssociationSet>
-          <AssociationSet Name="FK_Images_ToTable" Association="Self.FK_Images_ToTable">
+          <AssociationSet Name="FK_Images_ToBrands" Association="Self.FK_Images_ToBrands">
             <End Role="Brands" EntitySet="Brands" />
+            <End Role="Images" EntitySet="Images" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Images_ToStores" Association="Self.FK_Images_ToStores">
+            <End Role="Stores" EntitySet="Stores" />
             <End Role="Images" EntitySet="Images" />
           </AssociationSet>
         </EntityContainer>
@@ -195,6 +223,7 @@
           <EntitySet Name="AspNetUsers" EntityType="DataBase.AspNetUsers" />
           <EntitySet Name="Brands" EntityType="DataBase.Brands" />
           <EntitySet Name="Images" EntityType="DataBase.Images" />
+          <EntitySet Name="Stores" EntityType="DataBase.Stores" />
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="DataBase.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
@@ -203,8 +232,12 @@
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
           </AssociationSet>
-          <AssociationSet Name="FK_Images_ToTable" Association="DataBase.FK_Images_ToTable">
+          <AssociationSet Name="FK_Images_ToBrands" Association="DataBase.FK_Images_ToBrands">
             <End Role="Brands" EntitySet="Brands" />
+            <End Role="Images" EntitySet="Images" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Images_ToStores" Association="DataBase.FK_Images_ToStores">
+            <End Role="Stores" EntitySet="Stores" />
             <End Role="Images" EntitySet="Images" />
           </AssociationSet>
           <AssociationSet Name="AspNetUserRoles" Association="DataBase.AspNetUserRoles">
@@ -278,7 +311,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="true" Unicode="true" />
           <Property Name="Description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Images" Relationship="DataBase.FK_Images_ToTable" FromRole="Brands" ToRole="Images" />
+          <NavigationProperty Name="Images" Relationship="DataBase.FK_Images_ToBrands" FromRole="Brands" ToRole="Images" />
         </EntityType>
         <EntityType Name="Images">
           <Key>
@@ -288,7 +321,18 @@
           <Property Name="Guid" Type="Guid" Nullable="false" />
           <Property Name="Extension" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="BrandId" Type="Int32" />
-          <NavigationProperty Name="Brands" Relationship="DataBase.FK_Images_ToTable" FromRole="Images" ToRole="Brands" />
+          <Property Name="StoreId" Type="Int32" />
+          <NavigationProperty Name="Brands" Relationship="DataBase.FK_Images_ToBrands" FromRole="Images" ToRole="Brands" />
+          <NavigationProperty Name="Stores" Relationship="DataBase.FK_Images_ToStores" FromRole="Images" ToRole="Stores" />
+        </EntityType>
+        <EntityType Name="Stores">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Images" Relationship="DataBase.FK_Images_ToStores" FromRole="Stores" ToRole="Images" />
         </EntityType>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
           <End Type="DataBase.AspNetUsers" Role="AspNetUsers" Multiplicity="1">
@@ -318,7 +362,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Images_ToTable">
+        <Association Name="FK_Images_ToBrands">
           <End Type="DataBase.Brands" Role="Brands" Multiplicity="0..1">
             <OnDelete Action="Cascade" />
           </End>
@@ -329,6 +373,20 @@
             </Principal>
             <Dependent Role="Images">
               <PropertyRef Name="BrandId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Images_ToStores">
+          <End Type="DataBase.Stores" Role="Stores" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="DataBase.Images" Role="Images" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stores">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Images">
+              <PropertyRef Name="StoreId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -409,9 +467,19 @@
           <EntitySetMapping Name="Images">
             <EntityTypeMapping TypeName="DataBase.Images">
               <MappingFragment StoreEntitySet="Images">
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
                 <ScalarProperty Name="BrandId" ColumnName="BrandId" />
                 <ScalarProperty Name="Extension" ColumnName="Extension" />
                 <ScalarProperty Name="Guid" ColumnName="Guid" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Stores">
+            <EntityTypeMapping TypeName="DataBase.Stores">
+              <MappingFragment StoreEntitySet="Stores">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

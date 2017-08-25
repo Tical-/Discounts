@@ -18,7 +18,9 @@ namespace Discounts.Models
         public System.Guid Guid { get; set; }
         public string Extension { get; set; }
         public Nullable<int> BrandId { get; set; }
+        public Nullable<int> StoreId { get; set; }
     
         public virtual Brands Brands { get; set; }
+        public virtual Stores Stores { get; set; }
     }
 }

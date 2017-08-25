@@ -132,7 +132,79 @@ Application.BrandsViewModel = function () {
 
 
 //====================================================================//
-Application.StoresViewModel = function () {
+Application.StoresViewModel = function (Id) {
     var self = this;
-
+    if (Id != null) {
+        var answ = Application.POST("/api/AdminApi/StoreGetById/" + Id);
+        answ.success(function (data) {
+            $("#Name").text(data.Name);
+            $("#Description").text(data.Description);
+            $("#FileImg").attr('src', '~/../../../Images/' + data.File);
+        });
+    }
+    self.Brands = ko.observableArray();
+    self.GetBrands = function () {
+        self.Brands.removeAll();
+        var answ = Application.POST("/api/AdminApi/GetStores");
+        answ.success(function (data) {
+            $.each(data, function (index, value) {
+                self.Brands.push(new Brand(value));
+            });
+        });
+    };
+    self.GetBrands();
+    function Brand(data) {
+        var self = this;
+        if (data != null) {
+            self.Id = ko.observable(data.Id);
+            self.Name = ko.observable(data.Name);
+            self.ImageId = ko.observable(data.ImageId);
+            self.Description = ko.observable(data.Description);
+            self.File = ko.observable(data.File);
+        }
+        return self;
+    }
+    self.Insert = function (data) {
+        var ImageId = 0;
+        var filename = "";
+        var formData = new FormData();
+        formData.append('file', $('#File')[0].files[0]);
+        var answ = Application.POST("/api/AdminApi/UploadFile/", formData, false, false);
+        answ.success(function (data) {
+            ImageId = data.ID;
+            filename = data.file;
+            var answ2 = Application.POST("/api/AdminApi/InsertStore", ko.toJSON({ Name: $("#Name").val(), Description: $("#Description").val(), ImageId: ImageId, Id: 0, File: "" }));
+            answ2.success(function (data) {
+                var tempScrollTop = $(window).scrollTop();
+                var brand = new Brand();
+                brand.Id = ko.observable(data);
+                brand.Name = ko.observable($("#Name").val());
+                brand.Description = ko.observable($("#Description").val());
+                brand.File = ko.observable(filename);
+                $("#Name").val("");
+                $("#Description").val("");
+                self.Brands.push(brand);
+                setTimeout(function () {
+                    $('#All').masonry('destroy');
+                    $('#All').masonry({
+                        itemSelector: '.item',
+                        isAnimated: true
+                    });
+                    $(window).scrollTop(tempScrollTop);
+                }, 1500);
+            });
+        });
+    }
+    self.Delete = function (dt) {
+        if (confirm("Удалить бренд?")) {
+            var answ = Application.POST("/api/AdminApi/DeleteBrand/" + dt.Id());
+            answ.success(function (data) {
+                self.Brands.remove(dt);
+                $('#All').masonry({
+                    itemSelector: '.item',
+                    isAnimated: true
+                });
+            });
+        }
+    }.bind(this);
 }

@@ -20,6 +20,37 @@ namespace Discounts.Controllers
     public class AdminApiController : ApiController
     {
         [System.Web.Http.HttpPost]
+        public int? InsertStore(Store store)
+        {
+            using (var db = new DB())
+            {
+                if (store == null)
+                    throw new Exception("Store NULL exception");
+                var st = new Stores()
+                {
+                    Name = store.Name,
+                    Description = store.Description
+                };
+                db.Stores.Add(st);
+                db.SaveChanges();
+                db.Images.First(z => z.Id == store.ImageId).StoreId = st.Id;
+                db.SaveChanges();
+                return st.Id;
+            }
+        }
+
+
+        [System.Web.Http.HttpPost]
+        public Brand StoreGetById(int Id)
+        {
+            using (var db = new DB())
+            {
+                var brand = db.Brands.First(z => z.Id == Id);
+                return new Brand() { Id = brand.Id, Name = brand.Name, Description = brand.Description, File = brand.Images.First().Guid + brand.Images.First().Extension };
+            }
+        }
+
+        [System.Web.Http.HttpPost]
         public void DeleteBrand(int Id)
         {
             using (var db = new DB())
@@ -41,6 +72,17 @@ namespace Discounts.Controllers
                 }
             }
         }
+
+        //[System.Web.Http.HttpPost]
+        //public List<Store> GetStores()
+        //{
+        //    var brands = new List<Store>();
+        //    using (var db = new DB())
+        //    {
+        //        brands.AddRange(db.Stores.Where(z=>z.).ToList().Select(item => new Store() { Id = item.Id, Name = item.Name, Description = item.Description, ImageId = item.Images.First().Id, File = item.Images.First().Guid + item.Images.First().Extension }));
+        //        return brands;
+        //    }
+        //}
 
         [System.Web.Http.HttpPost]
         public List<Brand> GetBrands()
