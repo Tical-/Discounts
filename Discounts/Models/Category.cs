@@ -12,22 +12,26 @@ namespace Discounts.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Brands
+    public partial class Category
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Brands()
+        public Category()
         {
-            this.Images = new HashSet<Images>();
-            this.Stores = new HashSet<Stores>();
+            this.Category11 = new HashSet<Category>();
+            this.CategoryInStore = new HashSet<CategoryInStore>();
+            this.Products = new HashSet<Products>();
         }
     
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public Nullable<int> ParentId { get; set; }
+        public string Category1 { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Images> Images { get; set; }
+        public virtual ICollection<Category> Category11 { get; set; }
+        public virtual Category Category2 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Stores> Stores { get; set; }
+        public virtual ICollection<CategoryInStore> CategoryInStore { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Products> Products { get; set; }
     }
 }

@@ -31,7 +31,12 @@ namespace Discounts.Models
         public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<Brands> Brands { get; set; }
+        public virtual DbSet<Category> Category { get; set; }
+        public virtual DbSet<CategoryInStore> CategoryInStore { get; set; }
+        public virtual DbSet<CountSize> CountSize { get; set; }
         public virtual DbSet<Images> Images { get; set; }
+        public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<Stores> Stores { get; set; }
+        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
     }
 }

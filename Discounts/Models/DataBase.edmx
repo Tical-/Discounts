@@ -71,8 +71,33 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nchar" MaxLength="100" Nullable="false" />
-          <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ParentId" Type="int" />
+          <Property Name="Category" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CategoryInStore">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StoreId" Type="int" Nullable="false" />
+          <Property Name="CaregoryId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CountSize">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="Count" Type="int" Nullable="false" />
+          <Property Name="Size" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Images">
           <Key>
@@ -83,15 +108,92 @@
           <Property Name="Extension" Type="nchar" MaxLength="10" Nullable="false" />
           <Property Name="BrandId" Type="int" />
           <Property Name="StoreId" Type="int" />
+          <Property Name="ProductId" Type="int" />
+        </EntityType>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Price" Type="money" Nullable="false" />
+          <Property Name="CategoryId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Stores">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nchar" MaxLength="100" Nullable="false" />
-          <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="BrandId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" />
         </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_Category_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+          <End Role="Category1" Type="Self.Category" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Category1">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CategoryInStore_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CategoryInStore" Type="Self.CategoryInStore" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CategoryInStore">
+              <PropertyRef Name="CaregoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CategoryInStore_Stores">
+          <End Role="Stores" Type="Self.Stores" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CategoryInStore" Type="Self.CategoryInStore" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stores">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CategoryInStore">
+              <PropertyRef Name="StoreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CountSize_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CountSize" Type="Self.CountSize" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CountSize">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -148,10 +250,8 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Images_ToBrands">
-          <End Role="Brands" Type="Self.Brands" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
+        <Association Name="FK_Images_Brands">
+          <End Role="Brands" Type="Self.Brands" Multiplicity="0..1" />
           <End Role="Images" Type="Self.Images" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Brands">
@@ -162,10 +262,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Images_ToStores">
-          <End Role="Stores" Type="Self.Stores" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
+        <Association Name="FK_Images_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
+          <End Role="Images" Type="Self.Images" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Images">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Images_Stores">
+          <End Role="Stores" Type="Self.Stores" Multiplicity="0..1" />
           <End Role="Images" Type="Self.Images" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Stores">
@@ -173,6 +283,46 @@
             </Principal>
             <Dependent Role="Images">
               <PropertyRef Name="StoreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Products_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Products" Type="Self.Products" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Products">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Stores_Brands">
+          <End Role="Brands" Type="Self.Brands" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Stores" Type="Self.Stores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Brands">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Stores">
+              <PropertyRef Name="BrandId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Stores_Stores">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
+          <End Role="Stores" Type="Self.Stores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Stores">
+              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -184,8 +334,29 @@
           <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Brands" EntityType="Self.Brands" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CategoryInStore" EntityType="Self.CategoryInStore" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CountSize" EntityType="Self.CountSize" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Images" EntityType="Self.Images" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Stores" EntityType="Self.Stores" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Category_Category" Association="Self.FK_Category_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Category1" EntitySet="Category" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CategoryInStore_Category" Association="Self.FK_CategoryInStore_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="CategoryInStore" EntitySet="CategoryInStore" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CategoryInStore_Stores" Association="Self.FK_CategoryInStore_Stores">
+            <End Role="Stores" EntitySet="Stores" />
+            <End Role="CategoryInStore" EntitySet="CategoryInStore" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CountSize_Products" Association="Self.FK_CountSize_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="CountSize" EntitySet="CountSize" />
+          </AssociationSet>
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
@@ -202,13 +373,29 @@
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
           </AssociationSet>
-          <AssociationSet Name="FK_Images_ToBrands" Association="Self.FK_Images_ToBrands">
+          <AssociationSet Name="FK_Images_Brands" Association="Self.FK_Images_Brands">
             <End Role="Brands" EntitySet="Brands" />
             <End Role="Images" EntitySet="Images" />
           </AssociationSet>
-          <AssociationSet Name="FK_Images_ToStores" Association="Self.FK_Images_ToStores">
+          <AssociationSet Name="FK_Images_Products" Association="Self.FK_Images_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Images" EntitySet="Images" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Images_Stores" Association="Self.FK_Images_Stores">
             <End Role="Stores" EntitySet="Stores" />
             <End Role="Images" EntitySet="Images" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Products_Category" Association="Self.FK_Products_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Products" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Stores_Brands" Association="Self.FK_Stores_Brands">
+            <End Role="Brands" EntitySet="Brands" />
+            <End Role="Stores" EntitySet="Stores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Stores_Stores" Association="Self.FK_Stores_Stores">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Stores" EntitySet="Stores" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -222,8 +409,13 @@
           <EntitySet Name="AspNetUserLogins" EntityType="DataBase.AspNetUserLogins" />
           <EntitySet Name="AspNetUsers" EntityType="DataBase.AspNetUsers" />
           <EntitySet Name="Brands" EntityType="DataBase.Brands" />
+          <EntitySet Name="Category" EntityType="DataBase.Category" />
+          <EntitySet Name="CategoryInStore" EntityType="DataBase.CategoryInStore" />
+          <EntitySet Name="CountSize" EntityType="DataBase.CountSize" />
           <EntitySet Name="Images" EntityType="DataBase.Images" />
+          <EntitySet Name="Products" EntityType="DataBase.Products" />
           <EntitySet Name="Stores" EntityType="DataBase.Stores" />
+          <EntitySet Name="sysdiagrams" EntityType="DataBase.sysdiagrams" />
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="DataBase.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
@@ -232,11 +424,43 @@
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
           </AssociationSet>
-          <AssociationSet Name="FK_Images_ToBrands" Association="DataBase.FK_Images_ToBrands">
+          <AssociationSet Name="FK_Stores_Stores" Association="DataBase.FK_Stores_Stores">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Stores" EntitySet="Stores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Images_Brands" Association="DataBase.FK_Images_Brands">
             <End Role="Brands" EntitySet="Brands" />
             <End Role="Images" EntitySet="Images" />
           </AssociationSet>
-          <AssociationSet Name="FK_Images_ToStores" Association="DataBase.FK_Images_ToStores">
+          <AssociationSet Name="FK_Stores_Brands" Association="DataBase.FK_Stores_Brands">
+            <End Role="Brands" EntitySet="Brands" />
+            <End Role="Stores" EntitySet="Stores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Category_Category" Association="DataBase.FK_Category_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Category1" EntitySet="Category" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CategoryInStore_Category" Association="DataBase.FK_CategoryInStore_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="CategoryInStore" EntitySet="CategoryInStore" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Products_Category" Association="DataBase.FK_Products_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Products" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CategoryInStore_Stores" Association="DataBase.FK_CategoryInStore_Stores">
+            <End Role="Stores" EntitySet="Stores" />
+            <End Role="CategoryInStore" EntitySet="CategoryInStore" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CountSize_Products" Association="DataBase.FK_CountSize_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="CountSize" EntitySet="CountSize" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Images_Products" Association="DataBase.FK_Images_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Images" EntitySet="Images" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Images_Stores" Association="DataBase.FK_Images_Stores">
             <End Role="Stores" EntitySet="Stores" />
             <End Role="Images" EntitySet="Images" />
           </AssociationSet>
@@ -302,6 +526,7 @@
           <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AspNetUserClaims" Relationship="DataBase.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
           <NavigationProperty Name="AspNetUserLogins" Relationship="DataBase.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
+          <NavigationProperty Name="Stores" Relationship="DataBase.FK_Stores_Stores" FromRole="AspNetUsers" ToRole="Stores" />
           <NavigationProperty Name="AspNetRoles" Relationship="DataBase.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
         </EntityType>
         <EntityType Name="Brands">
@@ -309,9 +534,42 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="true" Unicode="true" />
-          <Property Name="Description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Images" Relationship="DataBase.FK_Images_ToBrands" FromRole="Brands" ToRole="Images" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Images" Relationship="DataBase.FK_Images_Brands" FromRole="Brands" ToRole="Images" />
+          <NavigationProperty Name="Stores" Relationship="DataBase.FK_Stores_Brands" FromRole="Brands" ToRole="Stores" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ParentId" Type="Int32" />
+          <Property Name="Category1" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Category11" Relationship="DataBase.FK_Category_Category" FromRole="Category" ToRole="Category1" />
+          <NavigationProperty Name="Category2" Relationship="DataBase.FK_Category_Category" FromRole="Category1" ToRole="Category" />
+          <NavigationProperty Name="CategoryInStore" Relationship="DataBase.FK_CategoryInStore_Category" FromRole="Category" ToRole="CategoryInStore" />
+          <NavigationProperty Name="Products" Relationship="DataBase.FK_Products_Category" FromRole="Category" ToRole="Products" />
+        </EntityType>
+        <EntityType Name="CategoryInStore">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StoreId" Type="Int32" Nullable="false" />
+          <Property Name="CaregoryId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Category" Relationship="DataBase.FK_CategoryInStore_Category" FromRole="CategoryInStore" ToRole="Category" />
+          <NavigationProperty Name="Stores" Relationship="DataBase.FK_CategoryInStore_Stores" FromRole="CategoryInStore" ToRole="Stores" />
+        </EntityType>
+        <EntityType Name="CountSize">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="Count" Type="Int32" Nullable="false" />
+          <Property Name="Size" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Products" Relationship="DataBase.FK_CountSize_Products" FromRole="CountSize" ToRole="Products" />
         </EntityType>
         <EntityType Name="Images">
           <Key>
@@ -322,17 +580,47 @@
           <Property Name="Extension" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="BrandId" Type="Int32" />
           <Property Name="StoreId" Type="Int32" />
-          <NavigationProperty Name="Brands" Relationship="DataBase.FK_Images_ToBrands" FromRole="Images" ToRole="Brands" />
-          <NavigationProperty Name="Stores" Relationship="DataBase.FK_Images_ToStores" FromRole="Images" ToRole="Stores" />
+          <Property Name="ProductId" Type="Int32" />
+          <NavigationProperty Name="Brands" Relationship="DataBase.FK_Images_Brands" FromRole="Images" ToRole="Brands" />
+          <NavigationProperty Name="Products" Relationship="DataBase.FK_Images_Products" FromRole="Images" ToRole="Products" />
+          <NavigationProperty Name="Stores" Relationship="DataBase.FK_Images_Stores" FromRole="Images" ToRole="Stores" />
+        </EntityType>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Price" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="CategoryId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Category" Relationship="DataBase.FK_Products_Category" FromRole="Products" ToRole="Category" />
+          <NavigationProperty Name="CountSize" Relationship="DataBase.FK_CountSize_Products" FromRole="Products" ToRole="CountSize" />
+          <NavigationProperty Name="Images" Relationship="DataBase.FK_Images_Products" FromRole="Products" ToRole="Images" />
         </EntityType>
         <EntityType Name="Stores">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="true" Unicode="true" />
-          <Property Name="Description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Images" Relationship="DataBase.FK_Images_ToStores" FromRole="Stores" ToRole="Images" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="BrandId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUsers" Relationship="DataBase.FK_Stores_Stores" FromRole="Stores" ToRole="AspNetUsers" />
+          <NavigationProperty Name="Brands" Relationship="DataBase.FK_Stores_Brands" FromRole="Stores" ToRole="Brands" />
+          <NavigationProperty Name="CategoryInStore" Relationship="DataBase.FK_CategoryInStore_Stores" FromRole="Stores" ToRole="CategoryInStore" />
+          <NavigationProperty Name="Images" Relationship="DataBase.FK_Images_Stores" FromRole="Stores" ToRole="Images" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
           <End Type="DataBase.AspNetUsers" Role="AspNetUsers" Multiplicity="1">
@@ -362,10 +650,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Images_ToBrands">
-          <End Type="DataBase.Brands" Role="Brands" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
+        <Association Name="FK_Stores_Stores">
+          <End Type="DataBase.AspNetUsers" Role="AspNetUsers" Multiplicity="0..1" />
+          <End Type="DataBase.Stores" Role="Stores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Stores">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Images_Brands">
+          <End Type="DataBase.Brands" Role="Brands" Multiplicity="0..1" />
           <End Type="DataBase.Images" Role="Images" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Brands">
@@ -376,10 +674,102 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Images_ToStores">
-          <End Type="DataBase.Stores" Role="Stores" Multiplicity="0..1">
+        <Association Name="FK_Stores_Brands">
+          <End Type="DataBase.Brands" Role="Brands" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
+          <End Type="DataBase.Stores" Role="Stores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Brands">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Stores">
+              <PropertyRef Name="BrandId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Category_Category">
+          <End Type="DataBase.Category" Role="Category" Multiplicity="0..1" />
+          <End Type="DataBase.Category" Role="Category1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Category1">
+              <PropertyRef Name="ParentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CategoryInStore_Category">
+          <End Type="DataBase.Category" Role="Category" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="DataBase.CategoryInStore" Role="CategoryInStore" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CategoryInStore">
+              <PropertyRef Name="CaregoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Products_Category">
+          <End Type="DataBase.Category" Role="Category" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="DataBase.Products" Role="Products" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Products">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CategoryInStore_Stores">
+          <End Type="DataBase.Stores" Role="Stores" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="DataBase.CategoryInStore" Role="CategoryInStore" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stores">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CategoryInStore">
+              <PropertyRef Name="StoreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CountSize_Products">
+          <End Type="DataBase.Products" Role="Products" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="DataBase.CountSize" Role="CountSize" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CountSize">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Images_Products">
+          <End Type="DataBase.Products" Role="Products" Multiplicity="0..1" />
+          <End Type="DataBase.Images" Role="Images" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Images">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Images_Stores">
+          <End Type="DataBase.Stores" Role="Stores" Multiplicity="0..1" />
           <End Type="DataBase.Images" Role="Images" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Stores">
@@ -394,7 +784,7 @@
           <End Type="DataBase.AspNetRoles" Role="AspNetRoles" Multiplicity="*" />
           <End Type="DataBase.AspNetUsers" Role="AspNetUsers" Multiplicity="*" />
         </Association>
-      </Schema>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -464,9 +854,38 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Category">
+            <EntityTypeMapping TypeName="DataBase.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="Category1" ColumnName="Category" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CategoryInStore">
+            <EntityTypeMapping TypeName="DataBase.CategoryInStore">
+              <MappingFragment StoreEntitySet="CategoryInStore">
+                <ScalarProperty Name="CaregoryId" ColumnName="CaregoryId" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CountSize">
+            <EntityTypeMapping TypeName="DataBase.CountSize">
+              <MappingFragment StoreEntitySet="CountSize">
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="Count" ColumnName="Count" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Images">
             <EntityTypeMapping TypeName="DataBase.Images">
               <MappingFragment StoreEntitySet="Images">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
                 <ScalarProperty Name="StoreId" ColumnName="StoreId" />
                 <ScalarProperty Name="BrandId" ColumnName="BrandId" />
                 <ScalarProperty Name="Extension" ColumnName="Extension" />
@@ -475,12 +894,36 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Stores">
-            <EntityTypeMapping TypeName="DataBase.Stores">
-              <MappingFragment StoreEntitySet="Stores">
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="DataBase.Products">
+              <MappingFragment StoreEntitySet="Products">
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Stores">
+            <EntityTypeMapping TypeName="DataBase.Stores">
+              <MappingFragment StoreEntitySet="Stores">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="BrandId" ColumnName="BrandId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="DataBase.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

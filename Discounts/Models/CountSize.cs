@@ -12,17 +12,13 @@ namespace Discounts.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Images
+    public partial class CountSize
     {
         public int Id { get; set; }
-        public System.Guid Guid { get; set; }
-        public string Extension { get; set; }
-        public Nullable<int> BrandId { get; set; }
-        public Nullable<int> StoreId { get; set; }
-        public Nullable<int> ProductId { get; set; }
+        public int ProductId { get; set; }
+        public int Count { get; set; }
+        public string Size { get; set; }
     
-        public virtual Brands Brands { get; set; }
         public virtual Products Products { get; set; }
-        public virtual Stores Stores { get; set; }
     }
 }

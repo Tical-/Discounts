@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
+using System.Windows.Forms.VisualStyles;
 using Discounts.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -73,16 +74,16 @@ namespace Discounts.Controllers
             }
         }
 
-        //[System.Web.Http.HttpPost]
-        //public List<Store> GetStores()
-        //{
-        //    var brands = new List<Store>();
-        //    using (var db = new DB())
-        //    {
-        //        brands.AddRange(db.Stores.Where(z=>z.).ToList().Select(item => new Store() { Id = item.Id, Name = item.Name, Description = item.Description, ImageId = item.Images.First().Id, File = item.Images.First().Guid + item.Images.First().Extension }));
-        //        return brands;
-        //    }
-        //}
+        [System.Web.Http.HttpPost]
+        public List<Store> GetStores(int Id)
+        {
+            var stores = new List<Store>();
+            using (var db = new DB())
+            {
+                stores.AddRange(db.Stores.Where(z => z.BrandId == Id).ToList().Select(item => new Store() { BrandId = item.BrandId, UserId = item.UserId, Id = item.Id, Name = item.Name, Description = item.Description, ImageId = item.Images.First().Id, File = item.Images.First().Guid + item.Images.First().Extension }));
+                return stores;
+            }
+        }
 
         [System.Web.Http.HttpPost]
         public List<Brand> GetBrands()

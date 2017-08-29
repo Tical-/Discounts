@@ -5,18 +5,31 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="9a1344ffdb21424ab5651013fb24f49a" Name="Diagram1">
-        <EntityTypeShape EntityType="DataBase.C__MigrationHistory" Width="1.5" PointX="5.75" PointY="6.75" />
-        <EntityTypeShape EntityType="DataBase.AspNetRoles" Width="1.5" PointX="0.75" PointY="2.5" />
-        <EntityTypeShape EntityType="DataBase.AspNetUserClaims" Width="1.5" PointX="5.25" PointY="1" />
-        <EntityTypeShape EntityType="DataBase.AspNetUserLogins" Width="1.5" PointX="5.25" PointY="3.75" />
-        <EntityTypeShape EntityType="DataBase.AspNetUsers" Width="1.5" PointX="3" PointY="1.375" />
-        <EntityTypeShape EntityType="DataBase.Brands" Width="1.5" PointX="0.75" PointY="10.25" />
-        <EntityTypeShape EntityType="DataBase.Images" Width="1.5" PointX="3" PointY="7" />
-        <EntityTypeShape EntityType="DataBase.Stores" Width="1.5" PointX="0.75" PointY="7.25" />
+        <EntityTypeShape EntityType="DataBase.C__MigrationHistory" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="DataBase.AspNetRoles" Width="1.5" PointX="1.5" PointY="9.5" />
+        <EntityTypeShape EntityType="DataBase.AspNetUserClaims" Width="1.5" PointX="6" PointY="10.5" />
+        <EntityTypeShape EntityType="DataBase.AspNetUserLogins" Width="1.5" PointX="6" PointY="8" />
+        <EntityTypeShape EntityType="DataBase.AspNetUsers" Width="1.5" PointX="3.75" PointY="8.25" />
+        <EntityTypeShape EntityType="DataBase.Brands" Width="1.5" PointX="0.75" PointY="3.25" />
+        <EntityTypeShape EntityType="DataBase.Category" Width="1.5" PointX="1.5" PointY="16.875" />
+        <EntityTypeShape EntityType="DataBase.CategoryInStore" Width="1.5" PointX="8.25" PointY="3.25" />
+        <EntityTypeShape EntityType="DataBase.CountSize" Width="1.5" PointX="3" PointY="14" />
+        <EntityTypeShape EntityType="DataBase.Images" Width="1.5" PointX="3" PointY="2.875" />
+        <EntityTypeShape EntityType="DataBase.Products" Width="1.5" PointX="0.75" PointY="12.75" />
+        <EntityTypeShape EntityType="DataBase.Stores" Width="1.5" PointX="6" PointY="2.875" />
+        <EntityTypeShape EntityType="DataBase.sysdiagrams" Width="1.5" PointX="8.75" PointY="6.75" />
         <AssociationConnector Association="DataBase.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
         <AssociationConnector Association="DataBase.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
-        <AssociationConnector Association="DataBase.FK_Images_ToBrands" />
-        <AssociationConnector Association="DataBase.FK_Images_ToStores" />
+        <AssociationConnector Association="DataBase.FK_Stores_Stores" />
+        <AssociationConnector Association="DataBase.FK_Images_Brands" />
+        <AssociationConnector Association="DataBase.FK_Stores_Brands" />
+        <AssociationConnector Association="DataBase.FK_Category_Category" />
+        <AssociationConnector Association="DataBase.FK_CategoryInStore_Category" />
+        <AssociationConnector Association="DataBase.FK_Products_Category" />
+        <AssociationConnector Association="DataBase.FK_CategoryInStore_Stores" />
+        <AssociationConnector Association="DataBase.FK_CountSize_Products" />
+        <AssociationConnector Association="DataBase.FK_Images_Products" />
+        <AssociationConnector Association="DataBase.FK_Images_Stores" />
         <AssociationConnector Association="DataBase.AspNetUserRoles" />
       </Diagram>
     </edmx:Diagrams>

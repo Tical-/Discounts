@@ -12,5 +12,7 @@ namespace Discounts.Models
         public int ImageId { get; set; }
         public int Id { get; set; }
         public string File { get; set; }
+        public int BrandId { get; set; }
+        public string UserId { get; set; }
     }
 }

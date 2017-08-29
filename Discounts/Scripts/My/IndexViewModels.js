@@ -143,16 +143,16 @@ Application.StoresViewModel = function (Id) {
         });
     }
     self.Brands = ko.observableArray();
-    self.GetBrands = function () {
+    self.GetBrands = function (Id) {
         self.Brands.removeAll();
-        var answ = Application.POST("/api/AdminApi/GetStores");
+        var answ = Application.POST("/api/AdminApi/GetStores/" + Id);
         answ.success(function (data) {
             $.each(data, function (index, value) {
                 self.Brands.push(new Brand(value));
             });
         });
     };
-    self.GetBrands();
+    self.GetBrands(Id);
     function Brand(data) {
         var self = this;
         if (data != null) {

@@ -12,17 +12,12 @@ namespace Discounts.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Images
+    public partial class sysdiagrams
     {
-        public int Id { get; set; }
-        public System.Guid Guid { get; set; }
-        public string Extension { get; set; }
-        public Nullable<int> BrandId { get; set; }
-        public Nullable<int> StoreId { get; set; }
-        public Nullable<int> ProductId { get; set; }
-    
-        public virtual Brands Brands { get; set; }
-        public virtual Products Products { get; set; }
-        public virtual Stores Stores { get; set; }
+        public string name { get; set; }
+        public int principal_id { get; set; }
+        public int diagram_id { get; set; }
+        public Nullable<int> version { get; set; }
+        public byte[] definition { get; set; }
     }
 }
